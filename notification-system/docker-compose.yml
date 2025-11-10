@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_PASSWORD: admin
+
+  redis:
+    image: redis:7-alpine
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
