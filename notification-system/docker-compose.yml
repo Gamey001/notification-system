@@ -1,15 +1,48 @@
 version: "3.8"
+
 services:
   postgres:
-    image: postgres:14
+    image: postgres:15
+    container_name: notification-postgres
     environment:
-      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - notification-network
 
   redis:
     image: redis:7-alpine
+    container_name: notification-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - notification-network
 
   rabbitmq:
     image: rabbitmq:3-management
+    container_name: notification-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: password
     ports:
       - "5672:5672"
       - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - notification-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:
+
+networks:
+  notification-network:
+    driver: bridge
